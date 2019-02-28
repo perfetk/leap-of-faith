@@ -1,26 +1,15 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-const cors = require('cors');
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 const notesUri = 'mongodb://notes:notes123!@ds145484.mlab.com:45484/notes_db';
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-let corsOptions = {
-    origin: 'http://localhost:3000',
-    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-};
-
-app.use(cors(corsOptions));
-// const notes = [];
-// const note = {
-//     title: 'test title',
-//     content: 'lorem ipsum'
-// }
 
 let db;
+
 MongoClient.connect(notesUri, (err, client) => {
     if (err) return console.log(err)
     db = client.db('notes_db') // whatever your database name is
@@ -31,7 +20,7 @@ MongoClient.connect(notesUri, (err, client) => {
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
-    db.collection('notes').find().toArray(function(err,result) {
+    db.collection('notes').find().toArray((err, result) => {
         console.log(result);
     })
 });
@@ -43,3 +32,14 @@ app.post('/notes', (req,res) => {
       })
 });
 
+app.put('/notes', (req, res) => {
+    db.collection('notes').findOneAndUpdate({title: 'test'}, {
+        $set: {
+            title: req.body.title,
+            message: req.body.message
+        }
+    }, (err, result) => {
+        if (err) return res.send(err)
+        res.send(result)
+      })
+})
