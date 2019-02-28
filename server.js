@@ -46,4 +46,10 @@ app.put('/notes', (req, res) => {
       })
 })
 
-
+app.delete('/notes', (req, res) => {
+    db.collection('notes').findOneAndDelete({title: req.body.title}, 
+        (err, result) => {
+            if (err) return res.send(err);
+            res.send(result)
+          })
+})
