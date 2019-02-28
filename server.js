@@ -10,6 +10,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 let db;
 
+const notes = []
+
 MongoClient.connect(notesUri, (err, client) => {
     if (err) return console.log(err)
     db = client.db('notes_db') // whatever your database name is
@@ -19,7 +21,7 @@ MongoClient.connect(notesUri, (err, client) => {
   })
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    //res.sendFile(__dirname + '/index.html');
     db.collection('notes').find().toArray((err, result) => {
         console.log(result);
     })
@@ -43,3 +45,5 @@ app.put('/notes', (req, res) => {
         res.send(result)
       })
 })
+
+
