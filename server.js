@@ -3,7 +3,7 @@ const app = express();
 const port = 3000;
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
-const notesUri = 'mongodb://notes:notes123!@ds145484.mlab.com:45484/notes_db';
+const notesUri = '';
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -14,14 +14,13 @@ const notes = []
 
 MongoClient.connect(notesUri, (err, client) => {
     if (err) return console.log(err)
-    db = client.db('notes_db') // whatever your database name is
+    db = client.db('notes_db');
     app.listen(port, () => {
       console.log('listening on 3000')
     })
   })
 
 app.get('/', (req, res) => {
-    //res.sendFile(__dirname + '/index.html');
     db.collection('notes').find().toArray((err, result) => {
         console.log(result);
     })
